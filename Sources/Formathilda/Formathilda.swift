@@ -28,11 +28,11 @@ public struct Formathilda {
         }
     }
     
-    func canEdit(_ input: String) -> Bool {
+    public func canEdit(_ input: String) -> Bool {
         return input.count <= format.filter({ String($0) == symbol }).count
     }
     
-    func format(_ input: String) -> String {
+    public func format(_ input: String) -> String {
         assert(input.rangeOfCharacter(from: characterSet) == nil)
         guard !input.isEmpty else { return input }
         
