@@ -1,8 +1,8 @@
 # This is for Mathilda! (Formathilda)
 ### Simple problems require simple solutions.
 
-Formathilda is aimed to provide an easy to use formatter, which allows... ehhmmm... easy fornatting?
-Examples speak better than English (and me), so let's use some.
+Formathilda is aimed to provide an easy to use formatter, which allows... ehhmmm... easy formatting?
+Examples speak louder than English (and me), so let's use some.
 
 Formathilda has two properties: A symbol and a format.
 
@@ -35,7 +35,7 @@ You give it an input, and tells it whether you'd like excess characters (after t
 func process(_ input: String?) -> String
 ```
 This method should be used for real time string formatting, like when you want to update a label when a user types.
-It will no add excessive characters.
+It will not add excessive characters.
 
 `let output = formathilda.process("1234567890 abcd")`
 
@@ -47,7 +47,7 @@ It will no add excessive characters.
 ```swift
 func process(_ input: String?, replacingCharactersIn range: NSRange, with replacementText: String) -> String
 ```
-This method is aimed for text field delegates for real time formatting. It will no add excessive characters.
+This method is aimed for text field delegates real time formatting. It will not add excessive characters.
 
 ```swift
 func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -67,8 +67,9 @@ Yes, it might not be the most efficient way.
 Yes, it uses integers instead of String.Index in some places.
 
 But!
+
 Yes, it is simple to understand.
-Yes, it solved simple, common problems.
+Yes, it solves simple, common problems.
 Yes, it is small and doesn't aim to be too generic.
 
 
