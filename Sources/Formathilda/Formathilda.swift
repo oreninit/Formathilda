@@ -11,29 +11,23 @@ import Foundation
 public struct Formathilda {
     public let symbol: String
     public let format: String
-    public let characterSet: CharacterSet
 
     /// Initialiases an instance of Formathilda
     /// - Parameters:
     ///   - symbol: A symbol (one character string) to represent input. For example: "#"
     ///   - format: A string representing the full, desired format. For Example: "##-##-#### (####)
-    ///   - allowedCharacters: Defines which characters can be passed as input. Default to anything but symbol
-    public init(symbol: String, format: String, allowedCharacters: String? = nil) {
+    public init(symbol: String, format: String) throws {
+        guard !format.isEmpty else {
+            throw FormathildaError.format
+        }
+        guard symbol.count == 1 else {
+            throw FormathildaError.symbol
+        }
         self.symbol = symbol
         self.format = format
-        if let allowed = allowedCharacters {
-            characterSet = CharacterSet(charactersIn: allowed).inverted // Just allowed characters
-        } else {
-            characterSet = CharacterSet(charactersIn: symbol) // Anything but symbol
-        }
-    }
-    
-    public func canEdit(_ input: String) -> Bool {
-        return input.count <= format.filter({ String($0) == symbol }).count
     }
     
     public func format(_ input: String) -> String {
-        assert(input.rangeOfCharacter(from: characterSet) == nil)
         guard !input.isEmpty else { return input }
         
         var index = 0
@@ -42,18 +36,44 @@ public struct Formathilda {
         
         while !inputCopy.isEmpty {
             guard index < format.count else { break }
-            guard !inputCopy.isEmpty else { break }
-            let charIndex = format.index(format.startIndex, offsetBy: index)
-            let currentSymbol = String(format[charIndex])
-            if currentSymbol != symbol {
-                output.append(currentSymbol)
+            let currentInputCharacter = readCharacter(at: index, from: format)
+            if currentInputCharacter != symbol {
+                output.append(currentInputCharacter)
             } else {
-                let digit = inputCopy.removeFirst()
-                output.append(digit)
+                let removed = inputCopy.removeFirst()
+                output.append(removed)
             }
             index += 1
         }
         
         return output
+    }
+    
+    public func process(_ input: String) -> String {
+        guard !input.isEmpty else { return input }
+        
+        var index = 0
+        var inputCopy = input
+        var output = ""
+        
+        while !inputCopy.isEmpty {
+            guard index < format.count else { break }
+            let currentInputCharacter = readCharacter(at: 0, from: inputCopy)
+            let currentFormatCharacter = readCharacter(at: index, from: format)
+            if currentFormatCharacter == currentInputCharacter || currentFormatCharacter == symbol {
+                let copy = inputCopy.removeFirst()
+                output.append(copy)
+            } else {
+                output.append(currentFormatCharacter)
+            }
+            index += 1
+        }
+        
+        return output
+    }
+    
+    private func readCharacter(at index: Int, from sourceString: String) -> String {
+        let characterIndex = sourceString.index(sourceString.startIndex, offsetBy: index)
+        return String(sourceString[characterIndex])
     }
 }
