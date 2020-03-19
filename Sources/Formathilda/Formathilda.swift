@@ -14,22 +14,18 @@ public struct Formathilda {
     
     /// Initialiases an instance of Formathilda
     /// - Parameters:
-    ///   - symbol: A symbol (one character string) to represent input. For example: "#"
-    ///   - format: A string representing the full, desired format. For Example: "##-##-#### (####)
-    public init(symbol: String, format: String) throws {
-        guard !format.isEmpty else {
-            throw FormathildaError.format
-        }
-        guard symbol.count == 1 else {
-            throw FormathildaError.symbol
-        }
+    ///   - symbol: A single charcter string representing an input. For example: "#"
+    ///   - format: A string representing the desired format. For Example: "##-##-#### (####)
+    public init(symbol: String, format: String) {
+        precondition(symbol.count == 1, "Symbol should contain one character when actual count is \(symbol.count)")
+        precondition(!format.isEmpty, "Format cannot be empty")
         self.symbol = symbol
         self.format = format
     }
 }
 
 public extension Formathilda {
-    func format(_ input: String?) -> String {
+    func format(_ input: String?, allowOverflow: Bool = false) -> String {
         guard let input = input else { return "" }
         guard !input.isEmpty else { return input }
         
@@ -38,7 +34,12 @@ public extension Formathilda {
         var output = ""
         
         while !inputCopy.isEmpty {
-            guard index < format.count else { break }
+            guard index < format.count else {
+                if allowOverflow {
+                    output.append(contentsOf: inputCopy)
+                }
+                break
+            }
             let currentInputCharacter = readCharacter(at: index, from: format)
             if currentInputCharacter != symbol {
                 output.append(currentInputCharacter)
