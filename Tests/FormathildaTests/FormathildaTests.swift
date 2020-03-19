@@ -4,19 +4,26 @@ import XCTest
 final class FormathildaTests: XCTestCase {
     let formathilda = try? Formathilda(symbol: "*", format: "(***) ***-****")
     
-    func testEmptyString() {
+    func testNilInput() {
+        let output = formathilda?.format(nil)
+        
+        XCTAssertEqual(output, "")
+
+    }
+    
+    func testEmptyInput() {
         let output = formathilda?.format("")
         
         XCTAssertEqual(output, "")
     }
     
-    func testPartial() {
+    func testPartialInput() {
         let output = formathilda?.format("123456")
         
         XCTAssertEqual(output, "(123) 456")
     }
     
-    func testFull() {
+    func testFullInput() {
         let output = formathilda?.format("1234567890")
         
         XCTAssertEqual(output, "(123) 456-7890")
